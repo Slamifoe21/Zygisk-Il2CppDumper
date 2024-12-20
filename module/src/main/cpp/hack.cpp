@@ -17,18 +17,31 @@
 #include <linux/unistd.h>
 #include <array>
 
+bool isLibraryLoaded(const char *libraryName) {
+    char line[512] = {0};
+    FILE *fp = fopen("/proc/self/maps", "rt");
+    if (fp != nullptr) {
+        while (fgets(line, sizeof(line), fp)) {
+            if (strstr(line, libraryName)) {
+                return true;
+            }
+        }
+        fclose(fp);
+    }
+    return false;
+}
+
 void hack_start(const char *game_data_dir) {
     bool load = false;
-    for (int i = 0; i < 20; i++) {
-        void *handle = xdl_open("libcsharp.so", 0);
-        if (handle) {
-            load = true;
-            il2cpp_api_init(handle);
-            il2cpp_dump(game_data_dir);
-            break;
-        } else {
-            sleep(1);
-        }
+    do {
+        sleep(1);
+    } while (!isLibraryLoaded("liblogic.so"));
+    sleep(4);
+    auto handle = dlopen("liblogic.so", 4);
+    if (handle) {
+        load = true;
+        il2cpp_api_init(handle);
+        il2cpp_dump(game_data_dir);
     }
     if (!load) {
         LOGI("libil2cpp.so not found in thread %d", gettid());
