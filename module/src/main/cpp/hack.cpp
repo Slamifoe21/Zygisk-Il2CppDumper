@@ -19,7 +19,7 @@
 
 void hack_start(const char *game_data_dir) {
     bool is_load = false;
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 30; ++i) {
         //auto handle = dlopen(LIB_TARGET, 4);
         void *handle = xdl_open("liblogic.so", 0);
         if (handle) {
