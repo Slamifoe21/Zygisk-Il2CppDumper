@@ -17,13 +17,11 @@
 #include <linux/unistd.h>
 #include <array>
 
-#define LIB_TARGET = "liblogic.so";
-
 void hack_start(const char *game_data_dir) {
     bool is_load = false;
-    for (int i = 0; i < 15; ++i) {
+    for (int i = 0; i < 10; ++i) {
         //auto handle = dlopen(LIB_TARGET, 4);
-        void *handle = xdl_open(LIB_TARGET, 0);
+        void *handle = xdl_open("liblogic.so", 0);
         if (handle) {
             is_load = true;
             il2cpp_api_init(handle);
@@ -32,7 +30,7 @@ void hack_start(const char *game_data_dir) {
         }
     }
     if (!is_load) {
-        LOGI("%s not found in thread %d", LIB_TARGET, gettid());
+        LOGI("liblogic.so not found in thread %d", gettid());
     }
 }
 
