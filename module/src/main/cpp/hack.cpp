@@ -22,7 +22,8 @@
 void hack_start(const char *game_data_dir) {
     bool is_load = false;
     for (int i = 0; i < 15; ++i) {
-        auto handle = dlopen(LIB_TARGET, 4);
+        //auto handle = dlopen(LIB_TARGET, 4);
+        void *handle xdl_open(LIB_TARGET, XDL_ALWAYS_FORCE_LOAD);
         if (handle) {
             is_logic = true;
             il2cpp_api_init(handle);
