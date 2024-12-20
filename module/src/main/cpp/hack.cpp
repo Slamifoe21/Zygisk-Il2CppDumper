@@ -32,7 +32,7 @@ void hack_start(const char *game_data_dir) {
         }
     }
     if (!is_load) {
-        LOGI("libil2cpp.so not found in thread %d", gettid());
+        LOGI("%s not found in thread %d", LIB_TARGET, gettid());
     }
 }
 
