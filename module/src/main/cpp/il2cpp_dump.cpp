@@ -126,7 +126,7 @@ std::string dump_method(Il2CppClass *klass) {
 		    char* outDir = "/data/data/com.mobile.legends/files/offset";
 		    auto outPath = std::string(outDir);
 		    std::ofstream outStream(outPath);
-		    outStream << std::hex << (uint64_t) method->methodPointer;
+		    outStream << std::hex << (uint64_t) method->methodPointer - il2cpp_base;
 		    outStream.close();
                     //write_mem(getpid(), (uint64_t) method->methodPointer, "\x01\x00\xA0\xE3\x1E\xFF\x2F\xE1", 8);
             }
