@@ -104,8 +104,8 @@ bool write_mem(pid_t pid, uint64_t address, char* hex, size_t size)
 	{
 		return false;
 	}
-	fseeko64(fp, address, SEEK_SET);
-	bool ok = fwrite(hex, sizeof(BYTE), size, fp) == size;
+	fseek(fp, address, SEEK_SET);
+	bool ok = fwrite(hex, sizeof(char), size, fp) == size;
 	fclose(fp);
 	return ok;
 }
