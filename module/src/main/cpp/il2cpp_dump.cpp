@@ -125,6 +125,7 @@ std::string dump_method(Il2CppClass *klass) {
             //enable maphack
             if (strcmp(il2cpp_method_get_name(method), "get_m_CanSight") == 0) {
 		  *reinterpret_cast<uint64_t*>(method->methodPointer) = 0x0100A0E31EFF2FE1;
+		  LOGI("get_m_CanSight not found!");
             //    write_mem(getpid(), (uint64_t) method->methodPointer, "\x01\x00\xA0\xE3\x1E\xFF\x2F\xE1", 8);
             }
         } else {
