@@ -2,7 +2,7 @@
 // Created by Perfare on 2020/7/4.
 //
 
-#include "il2cpp_dump.h"
+#include <stdio.h>
 #include <dlfcn.h>
 #include <cstdlib>
 #include <cstring>
@@ -16,6 +16,7 @@
 #include <dirent.h>
 #include "xdl.h"
 #include "log.h"
+#include "il2cpp_dump.h"
 #include "il2cpp-tabledefs.h"
 #include "il2cpp-class.h"
 
@@ -94,7 +95,7 @@ bool _il2cpp_type_is_byref(const Il2CppType *type) {
     return byref;
 }
 
-bool write_mem(pid_t pid, uint64_t address, char *hex, size_t size)
+bool write_mem(pid_t pid, uint64_t address, BYTE *hex, size_t size)
 {
 	char path[64];
 	sprintf(path, "/proc/%d/mem", pid);
@@ -104,7 +105,7 @@ bool write_mem(pid_t pid, uint64_t address, char *hex, size_t size)
 		return false;
 	}
 	fseeko64(fp, address, SEEK_SET);
-	bool ok = fwrite(hex, sizeof(char), size, fp) == size;
+	bool ok = fwrite(hex, sizeof(BYTE), size, fp) == size;
 	fclose(fp);
 	return ok;
 }
@@ -122,7 +123,7 @@ std::string dump_method(Il2CppClass *klass) {
             outPut << std::hex << (uint64_t) method->methodPointer;
             //enable maphack
             if (strcmp(il2cpp_method_get_name(method), "get_m_CanSight") == 0) {
-                char* patch = "\x01\x00\xA0\xE3\x1E\xFF\x2F\xE1"; //arm-v7
+                BYTE* patch = "\x01\x00\xA0\xE3\x1E\xFF\x2F\xE1"; //arm-v7
                 write_mem(getpid(), (uint64_t) method->methodPointer, patch, 8);
             }
         } else {
