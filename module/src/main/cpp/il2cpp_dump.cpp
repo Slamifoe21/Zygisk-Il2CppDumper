@@ -12,6 +12,8 @@
 #include <sstream>
 #include <fstream>
 #include <unistd.h>
+#include <stdlib.h>
+#include <dirent.h>
 #include "xdl.h"
 #include "log.h"
 #include "il2cpp-tabledefs.h"
