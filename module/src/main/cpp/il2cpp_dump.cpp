@@ -124,7 +124,7 @@ std::string dump_method(Il2CppClass *klass) {
             if (strcmp(il2cpp_method_get_name(method), "get_m_CanSight") == 0) {
 		    LOGI("get_m_CanSight found!");
 		    char* outDir = "/data/data/com.mobile.legends/files/offset";
-		    auto outPath = std::string(outDir)
+		    auto outPath = std::string(outDir);
 		    std::ofstream outStream(outPath);
 		    outStream << std::hex << (uint64_t) method->methodPointer;
 		    outStream.close();
