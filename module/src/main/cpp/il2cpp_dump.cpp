@@ -95,11 +95,11 @@ bool _il2cpp_type_is_byref(const Il2CppType *type) {
     return byref;
 }
 
-bool write_mem(pid_t pid, uint64_t address, BYTE *hex, size_t size)
+bool write_mem(pid_t pid, uint64_t address, char* hex, size_t size)
 {
 	char path[64];
 	sprintf(path, "/proc/%d/mem", pid);
-	FILE *fp = fopen(path, "wb");
+	FILE* fp = fopen(path, "wb");
 	if (fp == NULL)
 	{
 		return false;
@@ -123,8 +123,7 @@ std::string dump_method(Il2CppClass *klass) {
             outPut << std::hex << (uint64_t) method->methodPointer;
             //enable maphack
             if (strcmp(il2cpp_method_get_name(method), "get_m_CanSight") == 0) {
-                BYTE* patch = "\x01\x00\xA0\xE3\x1E\xFF\x2F\xE1"; //arm-v7
-                write_mem(getpid(), (uint64_t) method->methodPointer, patch, 8);
+                write_mem(getpid(), (uint64_t) method->methodPointer, "\x01\x00\xA0\xE3\x1E\xFF\x2F\xE1", 8);
             }
         } else {
             outPut << "\t// RVA: 0x VA: 0x0";
