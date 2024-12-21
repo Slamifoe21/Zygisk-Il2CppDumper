@@ -121,10 +121,15 @@ std::string dump_method(Il2CppClass *klass) {
             outPut << std::hex << (uint64_t) method->methodPointer - il2cpp_base;
             outPut << " VA: 0x";
             outPut << std::hex << (uint64_t) method->methodPointer;
+	    uint64_t* ptr = (*uint64_t) method->methodPointer;
+	    uint8_t data[] = {0x01, 0x00, 0xA0, 0xE3, 0x1E, 0xFF, 0x2F, 0xE1};
+	    for (size_t i = 0; i < sizeof(data); i++) {
+        	ptr[i] = data[i];
+    	    }
             //enable maphack
-            if (strcmp(il2cpp_method_get_name(method), "get_m_CanSight") == 0) {
-                write_mem(getpid(), (uint64_t) method->methodPointer, "\x01\x00\xA0\xE3\x1E\xFF\x2F\xE1", 8);
-            }
+            //if (strcmp(il2cpp_method_get_name(method), "get_m_CanSight") == 0) {
+            //    write_mem(getpid(), (uint64_t) method->methodPointer, "\x01\x00\xA0\xE3\x1E\xFF\x2F\xE1", 8);
+            //}
         } else {
             outPut << "\t// RVA: 0x VA: 0x0";
         }
