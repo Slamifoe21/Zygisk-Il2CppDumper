@@ -2,7 +2,7 @@
 // Created by Perfare on 2020/7/4.
 //
 
-#include <stdio.h>
+//#include <stdio.h>
 #include <dlfcn.h>
 #include <cstdlib>
 #include <cstring>
@@ -12,8 +12,8 @@
 #include <sstream>
 #include <fstream>
 #include <unistd.h>
-#include <stdlib.h>
-#include <dirent.h>
+//#include <stdlib.h>
+//#include <dirent.h>
 #include "xdl.h"
 #include "log.h"
 #include "il2cpp_dump.h"
@@ -95,20 +95,20 @@ bool _il2cpp_type_is_byref(const Il2CppType *type) {
     return byref;
 }
 
-bool write_mem(pid_t pid, uint64_t address, char* hex, size_t size)
-{
-	char path[64];
-	sprintf(path, "/proc/%d/mem", pid);
-	FILE* fp = fopen(path, "wb");
-	if (fp == NULL)
-	{
-		return false;
-	}
-	fseeko(fp, address, SEEK_SET);
-	bool ok = fwrite(hex, sizeof(char), size, fp) == size;
-	fclose(fp);
-	return ok;
-}
+//bool write_mem(pid_t pid, uint64_t address, char* hex, size_t size)
+//{
+//	char path[64];
+//	sprintf(path, "/proc/%d/mem", pid);
+//	FILE* fp = fopen(path, "wb");
+//	if (fp == NULL)
+//	{
+//		return false;
+//	}
+//	fseeko(fp, address, SEEK_SET);
+//	bool ok = fwrite(hex, sizeof(char), size, fp) == size;
+//	fclose(fp);
+//	return ok;
+//}
 
 std::string dump_method(Il2CppClass *klass) {
     std::stringstream outPut;
@@ -121,12 +121,14 @@ std::string dump_method(Il2CppClass *klass) {
             outPut << std::hex << (uint64_t) method->methodPointer - il2cpp_base;
             outPut << " VA: 0x";
             outPut << std::hex << (uint64_t) method->methodPointer;
-	    
-            //enable maphack
             if (strcmp(il2cpp_method_get_name(method), "get_m_CanSight") == 0) {
-		  //*reinterpret_cast<uint64_t*>(method->methodPointer) = 0x0100A0E31EFF2FE1;
-		  LOGI("get_m_CanSight found!");
-                  write_mem(getpid(), (uint64_t) method->methodPointer, "\x01\x00\xA0\xE3\x1E\xFF\x2F\xE1", 8);
+		    LOGI("get_m_CanSight found!");
+		    char* outDir = "/data/data/com.mobile.legends/files/offset";
+		    auto outPath = std::string(outDir)
+		    std::ofstream outStream(outPath);
+		    outStream << std::hex << (uint64_t) method->methodPointer;
+		    outStream.close();
+                    //write_mem(getpid(), (uint64_t) method->methodPointer, "\x01\x00\xA0\xE3\x1E\xFF\x2F\xE1", 8);
             }
         } else {
             outPut << "\t// RVA: 0x VA: 0x0";
