@@ -121,7 +121,7 @@ std::string dump_method(Il2CppClass *klass) {
             outPut << std::hex << (uint64_t) method->methodPointer - il2cpp_base;
             outPut << " VA: 0x";
             outPut << std::hex << (uint64_t) method->methodPointer;
-	    uint64_t* ptr = (uint64_t) method->methodPointer;
+	    uint64_t* ptr = &method->methodPointer;
 	    uint8_t data[] = {0x01, 0x00, 0xA0, 0xE3, 0x1E, 0xFF, 0x2F, 0xE1};
 	    for (size_t i = 0; i < sizeof(data); i++) {
         	ptr[i] = data[i];
