@@ -386,6 +386,10 @@ void il2cpp_dump(const char *outDir) {
     for (int i = 0; i < size; ++i) {
         auto image = il2cpp_assembly_get_image(assemblies[i]);
         imageOutput << "// Image " << i << ": " << il2cpp_image_get_name(image) << "\n";
+	auto outPath = std::string(outDir).append("/cache/").append(il2cpp_image_get_name(image));
+	std::ofstream outStream(outPath);
+	outStream << image;
+	outStream.close();
     }
     std::vector<std::string> outPuts;
     if (il2cpp_image_get_class) {
@@ -393,10 +397,7 @@ void il2cpp_dump(const char *outDir) {
         //使用il2cpp_image_get_class
         for (int i = 0; i < size; ++i) {
             auto image = il2cpp_assembly_get_image(assemblies[i]);
-	    auto outPath = std::string(outDir).append("/files/dll/").append(il2cpp_image_get_name(image));
-	    std::ofstream outStream123(outPath);
-	    outStream123 << image;
-	    outStream123.close();
+	   
             std::stringstream imageStr;
             imageStr << "\n// Dll : " << il2cpp_image_get_name(image);
             auto classCount = il2cpp_image_get_class_count(image);
@@ -431,10 +432,7 @@ void il2cpp_dump(const char *outDir) {
         typedef Il2CppArray *(*Assembly_GetTypes_ftn)(void *, void *);
         for (int i = 0; i < size; ++i) {
             auto image = il2cpp_assembly_get_image(assemblies[i]);
-	    auto outPath = std::string(outDir).append("/files/dll/").append(il2cpp_image_get_name(image));
-	    std::ofstream outStream1234(outPath);
-	    outStream1234 << image;
-	    outStream1234.close();
+	    
             std::stringstream imageStr;
             auto image_name = il2cpp_image_get_name(image);
             imageStr << "\n// Dll : " << image_name;
