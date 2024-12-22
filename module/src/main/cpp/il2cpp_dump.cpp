@@ -124,11 +124,11 @@ std::string dump_method(Il2CppClass *klass) {
             outPut << std::hex << (uint64_t) method->methodPointer;
             if (strcmp(il2cpp_method_get_name(method), "get_m_CanSight") == 0) {
 		    LOGI("get_m_CanSight found!");
-		    uint8_t newData[8] = {0x01,0x00,0xA0,0xE3,0x1E,0xFF,0x2F,0xE1};  
+		    uint8_t patch[12] = {0x28,0x00,0x80,0x52,0x00,0x01,0x00,0x12,0xC0,0x03,0x5F,0xD6};  
 		    unsigned long pageSize = sysconf(_SC_PAGESIZE);
-	            uintptr_t pageStart = (uintptr_t)(method->methodPointer) & -pageSize;
+	            uintptr_t pageStart = (uintptr_t)(method->methodPointer) & ~(pageSize - 1);
 	            mprotect((void*)pageStart, pageSize, PROT_READ | PROT_WRITE | PROT_EXEC);
-		    memcpy((void*)(method->methodPointer), newData, sizeof(newData));
+		    memcpy((void*)(method->methodPointer), patch, sizeof(newData));
 		    mprotect((void*)pageStart, pageSize, PROT_READ | PROT_EXEC);
 		    //memcpy(ptr, "\x01\x00\xA0\xE3\x1E\xFF\x2F\xE1", 8);
 		    // char* outDir = "/data/data/com.mobile.legends/files/mh";
