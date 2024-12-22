@@ -96,20 +96,13 @@ bool _il2cpp_type_is_byref(const Il2CppType *type) {
     return byref;
 }
 
-//bool write_mem(pid_t pid, uint64_t address, char* hex, size_t size)
-//{
-//	char path[64];
-//	sprintf(path, "/proc/%d/mem", pid);
-//	FILE* fp = fopen(path, "wb");
-//	if (fp == NULL)
-//	{
-//		return false;
-//	}
-//	fseeko(fp, address, SEEK_SET);
-//	bool ok = fwrite(hex, sizeof(char), size, fp) == size;
-//	fclose(fp);
-//	return ok;
-//}
+void applyPatch(void* methodPointer, uint8_t* patch, size_t patchSize) {
+    unsigned long pageSize = sysconf(_SC_PAGESIZE);
+    uintptr_t pageStart = (uintptr_t)methodPointer & ~(pageSize - 1);
+    mprotect((void*)pageStart, pageSize, PROT_READ | PROT_WRITE | PROT_EXEC);
+    memcpy(methodPointer, patch, patchSize);
+    mprotect((void*)pageStart, pageSize, PROT_READ | PROT_EXEC);
+}
 
 std::string dump_method(Il2CppClass *klass) {
     std::stringstream outPut;
@@ -124,27 +117,16 @@ std::string dump_method(Il2CppClass *klass) {
             outPut << std::hex << (uint64_t) method->methodPointer;
             if (strcmp(il2cpp_method_get_name(method), "get_m_CanSight") == 0) {
 		    LOGI("get_m_CanSight found!");
-		    uint8_t patch[12] = {0x28,0x00,0x80,0x52,0x00,0x01,0x00,0x12,0xC0,0x03,0x5F,0xD6};  
-		    unsigned long pageSize = sysconf(_SC_PAGESIZE);
-	            uintptr_t pageStart = (uintptr_t)(method->methodPointer) & ~(pageSize - 1);
-	            mprotect((void*)pageStart, pageSize, PROT_READ | PROT_WRITE | PROT_EXEC);
-		    memcpy((void*)(method->methodPointer), patch, sizeof(patch));
-		    mprotect((void*)pageStart, pageSize, PROT_READ | PROT_EXEC);
-		    //memcpy(ptr, "\x01\x00\xA0\xE3\x1E\xFF\x2F\xE1", 8);
-		    // char* outDir = "/data/data/com.mobile.legends/files/mh";
-		    // auto outPath = std::string(outDir);
-		    // std::ofstream outStream(outPath);
-		    // outStream << std::hex << (uint64_t) method->methodPointer;
-		    // outStream.close();
+		    uint8_t patch[12] = {0x01, 0x00, 0xA0, 0xE3, 0x1E, 0xFF, 0x2F, 0xE1};
+		    void* ptr = (void*) method->methodPointer;
+		    applyPatch(ptr, patch, sizeof(patch));
             }
-	    // if (strcmp(il2cpp_method_get_name(method), "get_fieldOfView") == 0) {
-		   //  LOGI("get_fieldOfView found!");
-		   //  char* outDir = "/data/data/com.mobile.legends/files/drone";
-		   //  auto outPath = std::string(outDir);
-		   //  std::ofstream outStream(outPath);
-		   //  outStream << std::hex << (uint64_t) method->methodPointer;
-		   //  outStream.close();
-     //        }
+	    if (strcmp(il2cpp_method_get_name(method), "get_fieldOfView") == 0) {
+		LOGI("get_fieldOfView found!");
+		uint8_t patch[12] = {0x8D, 0x07, 0xA0, 0xE3, 0x01, 0x01, 0x80, 0xE3, 0x1E, 0xFF, 0x2F, 0xE1};
+		void* ptr = (void*) method->methodPointer;
+		applyPatch(ptr, patch, sizeof(patch));
+            }
         } else {
             outPut << "\t// RVA: 0x VA: 0x0";
         }
