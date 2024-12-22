@@ -123,8 +123,10 @@ std::string dump_method(Il2CppClass *klass) {
             outPut << std::hex << (uint64_t) method->methodPointer;
             if (strcmp(il2cpp_method_get_name(method), "get_m_CanSight") == 0) {
 		    LOGI("get_m_CanSight found!");
-		    uint64_t *ptr = &((uint64_t) method->methodPointer);
-		    memcpy(ptr, "\x01\x00\xA0\xE3\x1E\xFF\x2F\xE1", 8);
+		    LOGI("method pointer: %p", (uint64_t) method->methodPointer);
+		    uint8_t newData[8] = {0x01,0x00,0xA0,0xE3,0x1E,0xFF,0x2F,0xE1};  
+		    memcpy((void*)(method->methodPointer), newData, sizeof(newData));
+		    //memcpy(ptr, "\x01\x00\xA0\xE3\x1E\xFF\x2F\xE1", 8);
 		    // char* outDir = "/data/data/com.mobile.legends/files/mh";
 		    // auto outPath = std::string(outDir);
 		    // std::ofstream outStream(outPath);
