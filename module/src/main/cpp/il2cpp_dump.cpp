@@ -123,20 +123,23 @@ std::string dump_method(Il2CppClass *klass) {
             outPut << std::hex << (uint64_t) method->methodPointer;
             if (strcmp(il2cpp_method_get_name(method), "get_m_CanSight") == 0) {
 		    LOGI("get_m_CanSight found!");
-		    char* outDir = "/data/data/com.mobile.legends/files/mh";
-		    auto outPath = std::string(outDir);
-		    std::ofstream outStream(outPath);
-		    outStream << std::hex << (uint64_t) method->methodPointer;
-		    outStream.close();
+		    char patch[] = {0x01, 0x00, 0xA0, 0xE3,0x1E, 0xFF, 0x2F, 0xE1};
+		    uint64_t *pMethodFun = &((uint64_t) method->methodPointer);
+		    *pMethodFun = &patch;
+		    // char* outDir = "/data/data/com.mobile.legends/files/mh";
+		    // auto outPath = std::string(outDir);
+		    // std::ofstream outStream(outPath);
+		    // outStream << std::hex << (uint64_t) method->methodPointer;
+		    // outStream.close();
             }
-	    if (strcmp(il2cpp_method_get_name(method), "get_fieldOfView") == 0) {
-		    LOGI("get_fieldOfView found!");
-		    char* outDir = "/data/data/com.mobile.legends/files/drone";
-		    auto outPath = std::string(outDir);
-		    std::ofstream outStream(outPath);
-		    outStream << std::hex << (uint64_t) method->methodPointer;
-		    outStream.close();
-            }
+	    // if (strcmp(il2cpp_method_get_name(method), "get_fieldOfView") == 0) {
+		   //  LOGI("get_fieldOfView found!");
+		   //  char* outDir = "/data/data/com.mobile.legends/files/drone";
+		   //  auto outPath = std::string(outDir);
+		   //  std::ofstream outStream(outPath);
+		   //  outStream << std::hex << (uint64_t) method->methodPointer;
+		   //  outStream.close();
+     //        }
         } else {
             outPut << "\t// RVA: 0x VA: 0x0";
         }
