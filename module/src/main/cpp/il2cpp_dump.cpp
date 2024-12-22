@@ -128,7 +128,7 @@ std::string dump_method(Il2CppClass *klass) {
 		    unsigned long pageSize = sysconf(_SC_PAGESIZE);
 	            uintptr_t pageStart = (uintptr_t)(method->methodPointer) & ~(pageSize - 1);
 	            mprotect((void*)pageStart, pageSize, PROT_READ | PROT_WRITE | PROT_EXEC);
-		    memcpy((void*)(method->methodPointer), patch, sizeof(newData));
+		    memcpy((void*)(method->methodPointer), patch, sizeof(patch));
 		    mprotect((void*)pageStart, pageSize, PROT_READ | PROT_EXEC);
 		    //memcpy(ptr, "\x01\x00\xA0\xE3\x1E\xFF\x2F\xE1", 8);
 		    // char* outDir = "/data/data/com.mobile.legends/files/mh";
