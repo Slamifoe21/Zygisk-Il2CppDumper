@@ -100,10 +100,7 @@ void applyPatch(uint64_t* methodPointer, uint8_t* patch, size_t patchSize) {
     unsigned long pageSize = sysconf(_SC_PAGESIZE);
     uintptr_t pageStart = (uintptr_t)methodPointer & ~(pageSize - 1);
     mprotect((void*)pageStart, pageSize, PROT_READ | PROT_WRITE | PROT_EXEC);
-    //memcpy(methodPointer, patch, patchSize);
-    for (size_t i = 0; i < patchSize; ++i) {
-	*(methodPointer + i) = *(patch + i);
-    } 
+    memcpy(methodPointer, patch, patchSize);
     mprotect((void*)pageStart, pageSize, PROT_READ | PROT_EXEC);
 }
 
