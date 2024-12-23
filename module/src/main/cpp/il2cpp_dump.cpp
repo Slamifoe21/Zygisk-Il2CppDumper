@@ -100,7 +100,10 @@ void applyPatch(void* methodPointer, uint8_t* patch, size_t patchSize) {
     unsigned long pageSize = sysconf(_SC_PAGESIZE);
     uintptr_t pageStart = (uintptr_t)methodPointer & ~(pageSize - 1);
     mprotect((void*)pageStart, pageSize, PROT_READ | PROT_WRITE | PROT_EXEC);
-    memcpy(methodPointer, patch, patchSize);
+    //memcpy(methodPointer, patch, patchSize);
+    for (size_t i = 0; i < patchSize; ++i) {
+	*(methodPointer + i) = *(patch + i);
+    } 
     mprotect((void*)pageStart, pageSize, PROT_READ | PROT_EXEC);
 }
 
@@ -122,12 +125,12 @@ std::string dump_method(Il2CppClass *klass) {
 		//uint8_t patch[] = {0x28, 0x00, 0x80, 0x52, 0x00, 0x01, 0x00, 0x12, 0xC0, 0x03, 0x5F, 0xD6}; //arm-v8
 		applyPatch(ptr, patch, sizeof(patch));
             }
-	    if (strcmp(il2cpp_method_get_name(method), "get_fieldOfView") == 0) {
+	    /*if (strcmp(il2cpp_method_get_name(method), "get_fieldOfView") == 0) {
 		LOGI("get_fieldOfView found!");
 		uint8_t patch[] = {0x8D, 0x07, 0xA0, 0xE3, 0x01, 0x01, 0x80, 0xE3, 0x1E, 0xFF, 0x2F, 0xE1}; //amv-v7
 		//uint8_t patch[] = {0x88, 0x46, 0xA8, 0x52, 0x00, 0x01, 0x27, 0x1E, 0xC0, 0x03, 0x5F, 0xD6}; //arm-v8
 		applyPatch(ptr, patch, sizeof(patch));
-            }
+            }*/
         } else {
             outPut << "\t// RVA: 0x VA: 0x0";
         }
