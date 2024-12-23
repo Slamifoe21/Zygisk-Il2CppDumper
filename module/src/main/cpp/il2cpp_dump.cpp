@@ -116,13 +116,12 @@ std::string dump_method(Il2CppClass *klass) {
             outPut << " VA: 0x";
             outPut << std::hex << (uint64_t) method->methodPointer;
 	    uint64_t* ptr = (uint64_t*) method->methodPointer;
-            /*if (strcmp(il2cpp_method_get_name(method), "get_m_CanSight") == 0) {
+            if (strcmp(il2cpp_method_get_name(method), "CanSight") == 0) {
 		LOGI("get_m_CanSight found!");
 		uint8_t patch[] = {0x01, 0x00, 0xA0, 0xE3, 0x1E, 0xFF, 0x2F, 0xE1}; //arm-v7
 		//uint8_t patch[] = {0x28, 0x00, 0x80, 0x52, 0x00, 0x01, 0x00, 0x12, 0xC0, 0x03, 0x5F, 0xD6}; //arm-v8
-		uint64_t* ptr = (uint64_t*) method->methodPointer;
 		applyPatch(ptr, patch, sizeof(patch));
-            }*/
+            }
 	    if (strcmp(il2cpp_method_get_name(method), "get_fieldOfView") == 0) {
 		LOGI("get_fieldOfView found!");
 		uint8_t patch[] = {0x8D, 0x07, 0xA0, 0xE3, 0x01, 0x01, 0x80, 0xE3, 0x1E, 0xFF, 0x2F, 0xE1}; //amv-v7
